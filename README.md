@@ -1,15 +1,15 @@
-
-# ?? Hostel Management System (HMS)
+<img width="1600" height="787" alt="image" src="https://github.com/user-attachments/assets/636207de-cba3-4f04-a119-4f5e83dbc122" />
+# 🏨 Hostel Management System (HMS)
 
 ### *A Modern, Automated Accommodation Portal for Air University*
 
-## ?? Introduction
+## 📝 Introduction
 
 The **Hostel Management System (HMS)** is a comprehensive digital solution developed to replace manual paper-based record-keeping in university hostels. Currently, there is no automated system in place at our university hostel; this project aims to fill that gap by providing a streamlined, secure, and transparent platform for both administrators (Wardens) and residents (Students).
 
 ---
 
-## ?? Key Features
+## 🚀 Key Features
 
 ### **Warden Portal (Admin)**
 
@@ -28,7 +28,7 @@ The **Hostel Management System (HMS)** is a comprehensive digital solution devel
 
 ---
 
-## ??? Technical Stack
+## 🛠️ Technical Stack
 
 * **Backend:** C# / ASP.NET Core 8.0 MVC
 * **Database:** MS SQL Server
@@ -39,7 +39,7 @@ The **Hostel Management System (HMS)** is a comprehensive digital solution devel
 
 ---
 
-## ??? System Architecture
+## 🏗️ System Architecture
 
 The project follows a **Three-Tier Architecture** to ensure separation of concerns and scalability:
 
@@ -49,7 +49,7 @@ The project follows a **Three-Tier Architecture** to ensure separation of concer
 
 ---
 
-## ?? Database Design
+## 📊 Database Design
 
 The system logic is built around the following core entities:
 
@@ -60,7 +60,7 @@ The system logic is built around the following core entities:
 
 ---
 
-## ?? Installation & Setup
+## 💻 Installation & Setup
 
 1. **Clone the repository:**
 ```bash
@@ -94,12 +94,16 @@ Update-Database
 | Login Portal | Warden Dashboard | Student View |
 | --- | --- | --- |
 |  |  |  |
+![Login Portal](Screenshots/LoginPortal.png)
+![Warden Dashboard](Screenshots/CommandCenter.png)
+![Student Dashboard](Screenshots/StudentPortal.png)
+
 
 Visit Screenshots => HostelApp/Screenshots
 
 ---
 
-## ?? Builder
+## 🎓 Builder
 
 **Ahmed Faraz** Computer Science Student, **Air University**.
 
