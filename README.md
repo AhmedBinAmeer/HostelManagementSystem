@@ -109,11 +109,11 @@ Update-Database
 
 ---
 
-## 🎓 Builder
+## 🎓 Programmer
 
-**Ahmed Faraz** Computer Science Student, **Air University**.
-**Wamiq Ejaz** Computer Science Student, **Air University**.
-**Muhammad AbuBaker** Computer Science Student, **Air University**.
+**Ahmed Faraz **
+** Wamiq Ejaz**
+** Muhammad AbuBaker**
 ---
 
 
