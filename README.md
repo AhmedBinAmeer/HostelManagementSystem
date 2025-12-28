@@ -111,9 +111,7 @@ Update-Database
 
 ## 🎓 Programmer
 
-**Ahmed Faraz 
-Wamiq Ejaz
-Muhammad Abubaker**
+**Ahmed Faraz | Wamiq Ejaz | Muhammad Abubaker**
 ---
 
 
