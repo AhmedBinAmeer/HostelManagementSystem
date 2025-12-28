@@ -89,17 +89,13 @@ Update-Database
 
 ---
 
-## ?? Project Previews
+## 📸 Project Previews
 
-| Login Portal | Warden Dashboard | Student View |
-| --- | --- | --- |
-|  |  |  |
-![Login Portal](Screenshots/LoginPortal.png)
-![Warden Dashboard](Screenshots/CommandCenter.png)
-![Student Dashboard](Screenshots/StudentPortal.png)
+| Login Portal | Warden Dashboard | Student Portal |
+| :---: | :---: | :---: |
+| ![Login](HostelApp/Screenshots/LoginPortal.jpeg) | ![Warden](HostelApp/Screenshots/CommandCenter.jpeg) | ![Student](HostelApp/Screenshots/StudentPortal.jpeg) |
 
 
-Visit Screenshots => HostelApp/Screenshots
 
 ---
 
