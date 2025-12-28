@@ -75,7 +75,7 @@ The system logic is built around the following core entities:
 
 1. **Clone the repository**:
 ```bash
-git clone https://github.com/YourUsername/HostelManagementSystem.git
+git clone https://github.com/AhmedBinAmeer/HostelManagementSystem.git
 
 ```
 
@@ -102,8 +102,6 @@ Update-Database
 
 ## 📸 Project Previews
 
-## 📸 Project Previews
-
 | Login Portal | Warden Dashboard | Student Portal |
 | :---: | :---: | :---: |
 | ![Login](HostelApp/Screenshots/LoginPortal.jpeg) | ![Warden](HostelApp/Screenshots/CommandCenter.jpeg) | ![Student](HostelApp/Screenshots/StudentPortal.jpeg) |
@@ -114,7 +112,8 @@ Update-Database
 ## 🎓 Builder
 
 **Ahmed Faraz** Computer Science Student, **Air University**.
-
+**Wamiq Ejaz** Computer Science Student, **Air University**.
+**Muhammad AbuBaker** Computer Science Student, **Air University**.
 ---
 
 
