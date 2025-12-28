@@ -1,0 +1,164 @@
+﻿@model HostelApp.Models.Student
+
+@{
+    ViewData["Title"] = "My Portal";
+    var fees = ViewBag.MyFees as List<HostelApp.Models.FeeChallan>;
+    var complaints = ViewBag.MyComplaints as List<HostelApp.Models.Complaint>;
+}
+
+<div class="container mt-4">
+
+    <div class="alert alert-primary d-flex align-items-center shadow-sm">
+        <i class="bi bi-person-circle fs-1 me-3"></i>
+        <div>
+            <h4 class="mb-0 fw-bold">Welcome, @Model.Name!</h4>
+            <span class="text-muted">Roll No: @Model.StudentRollNo | Program: @Model.Program</span>
+        </div>
+    </div>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            @TempData["Message"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-dark text-white fw-bold">
+                    <i class="bi bi-house-door-fill"></i> My Room Details
+                </div>
+                <div class="card-body">
+                    @if (Model.Room != null)
+                    {
+                        <div class="text-center mb-4">
+                            <h1 class="display-3 fw-bold text-primary">@Model.Room.RoomNumber</h1>
+                            <span class="badge bg-secondary">@Model.Room.Floor</span>
+                        </div>
+                        <h6 class="text-muted border-bottom pb-2">Roommates:</h6>
+                        <ul class="list-group list-group-flush">
+                            @foreach (var roommate in Model.Room.Students)
+                            {
+                                if (roommate.Id != Model.Id)
+                                {
+                                    <li class="list-group-item">
+                                        <i class="bi bi-person"></i> @roommate.Name
+                                    </li>
+                                }
+                            }
+                            @if (Model.Room.Students.Count == 1)
+                            {
+                                <li class="list-group-item text-muted fst-italic">You have the room to yourself!</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <div class="text-center text-danger p-4">
+                            <i class="bi bi-exclamation-circle fs-1"></i>
+                            <p class="mt-2">No Room Assigned yet.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-success text-white fw-bold">
+                    <i class="bi bi-cash-stack"></i> Fee History
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-striped mb-0 small">
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (fees != null && fees.Any())
+                            {
+                                @foreach (var fee in fees)
+                                {
+                                    <tr>
+                                        <td>@fee.Month</td>
+                                        <td>@fee.Amount</td>
+                                        <td>
+                                            @if (fee.IsPaid)
+                                            {
+                                                <span class="badge bg-success">PAID</span>
+                                            }
+                                            else
+                                            {
+
+                                                <span class="badge bg-danger">UNPAID</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr><td colspan="3" class="text-center p-3">No fee records found.</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-danger text-white fw-bold">
+                    <i class="bi bi-megaphone-fill"></i> File a Complaint
+                </div>
+                <div class="card-body">
+                    <form asp-action="SubmitComplaint" method="post">
+                        <div class="mb-2">
+                            <label class="form-label small fw-bold">Complaint Title</label>
+                            <input name="title" class="form-control form-control-sm" placeholder="e.g. Broken Fan" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Description</label>
+                            <textarea name="description" class="form-control form-control-sm" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-danger w-100 btn-sm">Submit Report</button>
+                    </form>
+
+                    <hr />
+                    <h6 class="small text-muted fw-bold">Recent Status:</h6>
+                    <div style="max-height: 150px; overflow-y: auto;">
+                        @if (complaints != null && complaints.Any())
+                        {
+                            @foreach (var c in complaints)
+                            {
+                                <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+                                    <small class="text-truncate" style="max-width: 150px;">@c.Title</small>
+                                    @if (c.Status == "Resolved")
+                                    {
+                                        <span class="badge bg-success" style="font-size:0.6em">RESOLVED</span>
+                                    }
+                                    else
+                                    {
+
+                                        <span class="badge bg-warning text-dark" style="font-size:0.6em">PENDING</span>
+                                    }
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p class="small text-muted">No complaints filed.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,147 @@
+﻿@{
+    ViewData["Title"] = "Warden Dashboard";
+}
+
+<style>
+    /* Global Application Theme: Luminous Navy radial gradient with fixed positioning for depth */
+    body {
+        background: radial-gradient(circle at 15% 15%, #144272, transparent 45%), radial-gradient(circle at 85% 85%, #1e56a0, transparent 45%), linear-gradient(135deg, #0a2647 0%, #061a33 100%);
+        background-attachment: fixed;
+        min-height: 100vh;
+        color: white;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+    }
+
+    /* Glassmorphism Logic: Implements backdrop-filter blur and translucent borders for modern UI aesthetics */
+    .glass-card-stat {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 28px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        animation: slideUpFade 0.5s ease-out forwards;
+        opacity: 0;
+    }
+
+        .glass-card-stat:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.18);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+    /* Decorative container for iconography using translucent overlays */
+    .stat-icon-box {
+        width: 64px;
+        height: 64px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 1.6rem;
+        backdrop-filter: blur(5px);
+    }
+
+    /* Sequential UX Animation: Staggered entrance for dashboard metrics */
+    @@keyframes slideUpFade {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .col-md-3:nth-child(1) .glass-card-stat {
+        animation-delay: 0.1s;
+    }
+
+    .col-md-3:nth-child(2) .glass-card-stat {
+        animation-delay: 0.2s;
+    }
+
+    .col-md-3:nth-child(3) .glass-card-stat {
+        animation-delay: 0.3s;
+    }
+
+    .col-md-3:nth-child(4) .glass-card-stat {
+        animation-delay: 0.4s;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="row mb-5">
+        <div class="col">
+            <h1 class="fw-bold text-white mb-1">Dashboard Overview</h1>
+            <p class="text-white-50">Welcome back, Warden! Here is the current hostel status.</p>
+        </div>
+    </div>
+
+    @* Dynamic Metric Grid: Renders real-time hostel statistics passed from the Controller via ViewBag *@
+    <div class="row g-4">
+        @* Total Resident Count *@
+        <div class="col-md-3">
+            <div class="card glass-card-stat border-0 h-100">
+                <div class="card-body text-center p-4">
+                    <div class="stat-icon-box" style="background: rgba(0, 210, 255, 0.2); color: #00d2ff; border: 1px solid rgba(0, 210, 255, 0.3);">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <h1 class="display-5 fw-bold text-white mb-0">@ViewBag.TotalStudents</h1>
+                    <p class="text-white-50 small fw-bold text-uppercase mt-2">Total Students</p>
+                </div>
+            </div>
+        </div>
+
+        @* Total Inventory Count *@
+        <div class="col-md-3">
+            <div class="card glass-card-stat border-0 h-100">
+                <div class="card-body text-center p-4">
+                    <div class="stat-icon-box" style="background: rgba(40, 167, 69, 0.2); color: #28a745; border: 1px solid rgba(40, 167, 69, 0.3);">
+                        <i class="bi bi-door-open-fill"></i>
+                    </div>
+                    <h1 class="display-5 fw-bold text-white mb-0">@ViewBag.TotalRooms</h1>
+                    <p class="text-white-50 small fw-bold text-uppercase mt-2">Total Rooms</p>
+                </div>
+            </div>
+        </div>
+
+        @* Occupancy Availability: Calculated based on room capacities vs current residents *@
+        <div class="col-md-3">
+            <div class="card glass-card-stat border-0 h-100">
+                <div class="card-body text-center p-4">
+                    <div class="stat-icon-box" style="background: rgba(255, 193, 7, 0.2); color: #ffc107; border: 1px solid rgba(255, 193, 7, 0.3);">
+                        <i class="bi bi-person-check-fill"></i>
+                    </div>
+                    <h1 class="display-5 fw-bold text-white mb-0">@ViewBag.EmptyBeds</h1>
+                    <p class="text-white-50 small fw-bold text-uppercase mt-2">Available Beds</p>
+                </div>
+            </div>
+        </div>
+
+        @* Unresolved Support Tickets: Tracks maintenance and administrative issues *@
+        <div class="col-md-3">
+            <div class="card glass-card-stat border-0 h-100">
+                <div class="card-body text-center p-4">
+                    <div class="stat-icon-box" style="background: rgba(220, 53, 69, 0.2); color: #dc3545; border: 1px solid rgba(220, 53, 69, 0.3);">
+                        <i class="bi bi-chat-left-dots-fill"></i>
+                    </div>
+                    <h1 class="display-5 fw-bold text-white mb-0">@ViewBag.PendingComplaints</h1>
+                    <p class="text-white-50 small fw-bold text-uppercase mt-2">Pending Complaints</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Footer Branding: Institutional identification for Air University *@
+    <div class="row mt-5 pt-5">
+        <div class="col-12 text-center opacity-25">
+            <img src="~/images/Airlogo.png" style="width: 160px; filter: brightness(0) invert(1);" />
+            <h5 class="mt-3 text-white fw-light letter-spacing-2">HOSTEL MANAGEMENT SYSTEM</h5>
+        </div>
+    </div>
+</div>

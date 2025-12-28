@@ -1,0 +1,166 @@
+﻿@model IEnumerable<HostelApp.Models.Complaint>
+
+<style>
+    /* Technical Theme: Luminous Navy with fixed radial gradients for visual depth */
+    body {
+        background: radial-gradient(circle at 15% 15%, #144272, transparent 40%), radial-gradient(circle at 85% 85%, #1e56a0, transparent 40%), linear-gradient(135deg, #0a2647 0%, #061a33 100%);
+        background-attachment: fixed;
+        min-height: 100vh;
+        color: #ccd6f6;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+    }
+
+    /* Glassmorphism Implementation: Encapsulated container with high-saturation backdrop-blur */
+    .glass-container {
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 24px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        overflow: hidden;
+    }
+
+    /* Table Typography: Utilizes Cyber-Cyan accents (#64ffda) for professional technical aesthetics */
+    .glass-table {
+        color: #ccd6f6 !important;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+        .glass-table thead th {
+            background: rgba(255, 255, 255, 0.05);
+            color: #64ffda !important;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1.5px;
+            border: none;
+            padding: 20px;
+        }
+
+        .glass-table td {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            vertical-align: middle;
+        }
+
+        .glass-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+            transition: 0.3s ease;
+        }
+
+    /* Interaction Feedback: Luminous action button with translucent hover state and translate animation */
+    .btn-resolve-glass {
+        background: rgba(100, 255, 218, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(100, 255, 218, 0.3);
+        color: #64ffda !important;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: 0.3s ease;
+        padding: 6px 15px;
+    }
+
+        .btn-resolve-glass:hover {
+            background: rgba(100, 255, 218, 0.2);
+            box-shadow: 0 0 15px rgba(100, 255, 218, 0.3);
+            transform: translateY(-2px);
+        }
+</style>
+
+<div class="container mt-4 pb-5">
+    <div class="mb-4">
+        <h2 class="text-white fw-bold">
+            <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Resident Complaints
+        </h2>
+        <p class="text-white-50">Monitor and resolve maintenance requests and student issues.</p>
+    </div>
+
+    <div class="glass-container">
+        <div class="table-responsive">
+            <table class="table glass-table mb-0">
+                <thead>
+                    <tr>
+                        <th>Received On</th>
+                        <th>Resident</th>
+                        <th>Unit</th>
+                        <th style="width: 35%;">Issue Details</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @* Controller-passed Model Enumeration: Iterates through student-submitted maintenance logs *@
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="small opacity-75">@item.Date.ToString("dd MMM yyyy")</td>
+                            <td>
+                                <div class="fw-bold text-white">@item.Student.Name</div>
+                                <div class="small opacity-50">@item.Student.StudentRollNo</div>
+                            </td>
+                            <td>
+                                @* Entity Relationship Validation: Checks for active room association before rendering Unit ID *@
+                                @if (item.Student.Room != null)
+                                {
+                                    <span class="badge" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); color: white;">
+                                        @item.Student.Room.RoomNumber
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="opacity-25">-</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="text-white fw-bold mb-1">@item.Title</div>
+                                <div class="small opacity-50 text-wrap">@item.Description</div>
+                            </td>
+                            <td>
+                                @* Conditional Status Rendering: Differentiates operational states via translucent UI indicators *@
+                                @if (item.Status == "Pending")
+                                {
+                                    <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-3">
+                                        <i class="bi bi-clock-history me-1"></i> PENDING
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3">
+                                        <i class="bi bi-check-circle me-1"></i> RESOLVED
+                                    </span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                @* Action Logic: Provides 'Resolve' functionality via POST request for Pending items only *@
+                                @if (item.Status == "Pending")
+                                {
+                                    <form asp-action="Resolve" asp-route-id="@item.Id" method="post">
+                                        <button type="submit" class="btn btn-sm btn-resolve-glass">
+                                            <i class="bi bi-shield-check me-1"></i> Resolve
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <span class="small text-white-50"><i class="bi bi-check-all me-1 text-success"></i> Handled</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            @* Conditional State Handling: Renders an 'Empty State' UI if no records persist in the Model collection *@
+            @if (!Model.Any())
+            {
+                <div class="p-5 text-center">
+                    <div class="display-1 opacity-10 mb-3"><i class="bi bi-emoji-smile"></i></div>
+                    <h4 class="text-white opacity-50">No active complaints found!</h4>
+                    <p class="text-white-25">Everything in the hostel seems to be running smoothly.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

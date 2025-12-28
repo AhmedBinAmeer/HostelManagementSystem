@@ -1,0 +1,181 @@
+﻿@model IEnumerable<HostelApp.Models.FeeChallan>
+
+<style>
+    /* Global project theme: Luminous Navy with fixed radial gradients for visual depth */
+    body {
+        background: radial-gradient(circle at 15% 15%, #144272, transparent 40%), radial-gradient(circle at 85% 85%, #1e56a0, transparent 40%), linear-gradient(135deg, #0a2647 0%, #061a33 100%);
+        background-attachment: fixed;
+        min-height: 100vh;
+        color: white;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+    }
+
+    /* Glassmorphism Implementation: Utilizes backdrop-blur (blur(25px)) for professional UI transparency */
+    .glass-container {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 24px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        overflow: hidden;
+    }
+
+    /* Table styling utilizing the Cyber-Cyan accent (#64ffda) for technical clarity */
+    .glass-table {
+        color: white !important;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+        .glass-table thead th {
+            background: rgba(255, 255, 255, 0.05);
+            color: #64ffda !important;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1.5px;
+            border: none;
+            padding: 20px;
+        }
+
+        .glass-table td {
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            vertical-align: middle;
+        }
+
+        .glass-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+            transition: 0.3s ease;
+        }
+
+    /* Button interactions: Features translucent hover states and luminous glow effects */
+    .btn-glass-action {
+        background: rgba(100, 255, 218, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(100, 255, 218, 0.3);
+        color: #64ffda !important;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+        .btn-glass-action:hover {
+            background: rgba(100, 255, 218, 0.2);
+            box-shadow: 0 0 15px rgba(100, 255, 218, 0.3);
+        }
+
+    .btn-glass-warning {
+        background: rgba(255, 193, 7, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 193, 7, 0.3);
+        color: #ffc107 !important;
+        border-radius: 12px;
+        transition: 0.3s;
+    }
+
+        .btn-glass-warning:hover {
+            background: rgba(255, 193, 7, 0.2);
+            box-shadow: 0 0 15px rgba(255, 193, 7, 0.3);
+        }
+</style>
+
+<div class="container mt-4 pb-5">
+    @* Application feedback: Renders transactional success messages passed from the FeeController *@
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert bg-success bg-opacity-10 text-success border border-success border-opacity-25 alert-dismissible fade show mb-4" role="alert" style="border-radius: 15px; backdrop-filter: blur(10px);">
+            <i class="bi bi-check-circle-fill me-2"></i> @TempData["Message"]
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-white"><i class="bi bi-wallet2 me-2 text-info"></i>Fee Management</h2>
+
+        @* Administrative Task: Initiates a bulk generation of monthly challans for the entire resident directory *@
+        <form asp-action="GenerateMonthlyFees" method="post">
+            <button type="submit" class="btn btn-glass-warning fw-bold px-4 py-2">
+                <i class="bi bi-lightning-charge-fill me-1"></i> Generate @DateTime.Now.ToString("MMMM") Bills
+            </button>
+        </form>
+    </div>
+
+    <div class="glass-container">
+        <div class="table-responsive">
+            <table class="table glass-table mb-0">
+                <thead>
+                    <tr>
+                        <th>Transaction</th>
+                        <th>Student Information</th>
+                        <th>Room</th>
+                        <th>Billing Month</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @* Data Binding: Iterates through the FeeChallan collection loaded via Entity Framework *@
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="small opacity-50">#@item.Id</td>
+                            <td>
+                                <div class="fw-bold text-white">@item.Student.Name</div>
+                                <div class="small opacity-50">@item.Student.StudentRollNo</div>
+                            </td>
+                            <td>
+                                @* Navigation Property Validation: Checks for eager-loaded Room data to prevent null reference errors *@
+                                @if (item.Student.Room != null)
+                                {
+                                    <span class="badge" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);">
+                                        <i class="bi bi-door-closed me-1"></i> @item.Student.Room.RoomNumber
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="opacity-25">-</span>
+                                }
+                            </td>
+                            <td>@item.Month</td>
+                            <td class="fw-bold" style="color: #64ffda;">Rs. @item.Amount</td>
+                            <td>
+                                @* Status Logic: Renders specific UI indicators based on the boolean IsPaid property *@
+                                @if (item.IsPaid)
+                                {
+                                    <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3">
+                                        <i class="bi bi-check-circle me-1"></i> PAID
+                                    </span>
+                                    <div class="small opacity-50 mt-1" style="font-size: 0.7rem;">@item.PaidDate?.ToString("dd MMM, yyyy")</div>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-3">
+                                        <i class="bi bi-clock-history me-1"></i> UNPAID
+                                    </span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                @* Verification Flow: Provides a POST-based verification action for unresolved transactions *@
+                                @if (!item.IsPaid)
+                                {
+                                    <form asp-action="MarkPaid" asp-route-id="@item.Id" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-glass-action px-3 py-1">
+                                            Verify Payment
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <span class="small text-white-50"><i class="bi bi-shield-check me-1"></i> Verified</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

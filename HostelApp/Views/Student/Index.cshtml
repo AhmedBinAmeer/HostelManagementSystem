@@ -1,0 +1,183 @@
+﻿@model IEnumerable<HostelApp.Models.Student>
+
+<style>
+    /* 1. THEME BACKGROUND - Luminous Navy */
+    body {
+        background: radial-gradient(circle at 15% 15%, #144272, transparent 40%), radial-gradient(circle at 85% 85%, #1e56a0, transparent 40%), linear-gradient(135deg, #0a2647 0%, #061a33 100%);
+        background-attachment: fixed;
+        min-height: 100vh;
+        color: #ccd6f6;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+    }
+
+    /* 2. THE GLASS PANEL CONTAINER */
+    .glass-container {
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 24px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        overflow: hidden;
+    }
+
+    /* 3. GLASSY TABLE STYLES */
+    .glass-table {
+        color: #ccd6f6 !important;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+        .glass-table thead th {
+            background: rgba(255, 255, 255, 0.05);
+            color: #64ffda !important; /* Cyber Cyan accent */
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1.5px;
+            border: none;
+            padding: 20px;
+        }
+
+        .glass-table td {
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            vertical-align: middle;
+        }
+
+        .glass-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+            transition: 0.3s ease;
+        }
+
+    /* 4. LUMINOUS INPUTS & BUTTONS */
+    .btn-action-glass {
+        background: rgba(100, 255, 218, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(100, 255, 218, 0.3);
+        color: #64ffda !important;
+        border-radius: 12px;
+        font-weight: 600;
+        transition: 0.3s ease;
+        padding: 10px 20px;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-action-glass:hover {
+            background: rgba(100, 255, 218, 0.2);
+            box-shadow: 0 0 15px rgba(100, 255, 218, 0.3);
+            transform: translateY(-2px);
+        }
+
+    .glass-input {
+        background: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        color: white !important;
+        border-radius: 12px !important;
+        padding: 10px 15px;
+    }
+
+        .glass-input:focus {
+            border-color: #64ffda !important;
+            box-shadow: 0 0 10px rgba(100, 255, 218, 0.2) !important;
+        }
+
+    /* Action Icon Styling */
+    .icon-link {
+        font-size: 1.1rem;
+        transition: 0.2s;
+        opacity: 0.7;
+    }
+
+        .icon-link:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+</style>
+
+<div class="container mt-4 pb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="text-white fw-bold mb-1">
+                <i class="bi bi-people-fill text-info me-2"></i>Resident Directory
+            </h2>
+            <p class="text-white-50 small mb-0">Manage student enrollments and room assignments.</p>
+        </div>
+        <a asp-action="Create" class="btn-action-glass">
+            <i class="bi bi-person-plus-fill me-2"></i>New Student
+        </a>
+    </div>
+
+    <form asp-action="Index" method="get" class="mb-4">
+        <div class="input-group" style="max-width: 500px;">
+            <input type="text" name="searchString" class="form-control glass-input"
+                   placeholder="Search by Name or Roll Number..." />
+            <button class="btn btn-action-glass ms-2" type="submit">
+                <i class="bi bi-search"></i>
+            </button>
+        </div>
+    </form>
+
+    <div class="glass-container">
+        <div class="table-responsive">
+            <table class="table glass-table mb-0">
+                <thead>
+                    <tr>
+                        <th>Full Name</th>
+                        <th>Roll Number</th>
+                        <th>Program</th>
+                        <th>Unit Assignment</th>
+                        <th>Contact</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="fw-bold text-white">@item.Name</td>
+                            <td>
+                                <span class="badge" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #ccd6f6;">
+                                    @item.StudentRollNo
+                                </span>
+                            </td>
+                            <td class="opacity-75">@item.Program</td>
+                            <td>
+                                @if (item.Room != null)
+                                {
+                                    <span class="badge" style="background: rgba(100, 255, 218, 0.1); color: #64ffda; border: 1px solid rgba(100, 255, 218, 0.2);">
+                                        <i class="bi bi-door-closed me-1"></i> @item.Room.RoomNumber
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge" style="background: rgba(255, 193, 7, 0.05); color: #ffc107; border: 1px solid rgba(255, 193, 7, 0.1);">
+                                        <i class="bi bi-geo-alt me-1"></i> Not Assigned
+                                    </span>
+                                }
+                            </td>
+                            <td class="opacity-50 small">@item.PhoneNumber</td>
+                            <td class="text-end">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="text-info icon-link me-3">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="text-danger icon-link">
+                                    <i class="bi bi-trash3-fill"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            @if (!Model.Any())
+            {
+                <div class="p-5 text-center">
+                    <div class="display-4 opacity-10 mb-3"><i class="bi bi-search"></i></div>
+                    <h5 class="text-white opacity-50">No residents found matching your search.</h5>
+                </div>
+            }
+        </div>
+    </div>
+</div>

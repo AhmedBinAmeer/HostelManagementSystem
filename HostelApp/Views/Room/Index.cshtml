@@ -1,0 +1,190 @@
+﻿@model IEnumerable<HostelApp.Models.Room>
+
+<style>
+    /* Global Application Theme: Luminous Navy radial gradient with fixed positioning for depth */
+    body {
+        background: radial-gradient(circle at 15% 15%, #144272, transparent 40%), radial-gradient(circle at 85% 85%, #1e56a0, transparent 40%), linear-gradient(135deg, #0a2647 0%, #061a33 100%);
+        background-attachment: fixed;
+        min-height: 100vh;
+        color: white;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+    }
+
+    /* Glassmorphism Logic: Implements high-saturation backdrop-blur and translucent borders for UI elevation */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 24px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        animation: slideUpFade 0.5s ease-out forwards;
+        opacity: 0;
+    }
+
+        .glass-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+    /* Action Layer: Unified glass button styling with translucent hover-state transitions */
+    .glass-btn {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white !important;
+        border-radius: 12px;
+        transition: 0.3s;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .glass-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+    /* Destructive Action: Variant of the glass button using a Red tint for visual hazard hierarchy */
+    .glass-btn-danger {
+        background: rgba(255, 71, 87, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 71, 87, 0.3);
+        color: #ff4757 !important;
+        border-radius: 12px;
+        transition: 0.3s;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .glass-btn-danger:hover {
+            background: rgba(255, 71, 87, 0.2);
+            border-color: rgba(255, 71, 87, 0.6);
+            box-shadow: 0 0 15px rgba(255, 71, 87, 0.3);
+            color: white !important;
+        }
+
+    /* UI Animation: Sequential staggered entrance for the room inventory grid */
+    @@keyframes slideUpFade {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .col-md-4:nth-child(1) .glass-card {
+        animation-delay: 0.1s;
+    }
+
+    .col-md-4:nth-child(2) .glass-card {
+        animation-delay: 0.2s;
+    }
+
+    .col-md-4:nth-child(3) .glass-card {
+        animation-delay: 0.3s;
+    }
+</style>
+
+<div class="container mt-4 pb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-white"><i class="bi bi-door-open-fill me-2 text-info"></i>Room Inventory</h2>
+        <a asp-action="Create" class="glass-btn px-4 py-2">
+            <i class="bi bi-plus-lg me-2"></i> Add New Room
+        </a>
+    </div>
+
+    @* Dynamic Filtering: Provides server-side floor-based filtering via GET requests *@
+    <div class="glass-card mb-4 p-3" style="animation: none; opacity: 1; border-radius: 18px;">
+        <form asp-action="Index" method="get" class="row align-items-center g-3">
+            <div class="col-auto">
+                <label class="fw-bold text-white-50 small text-uppercase"><i class="bi bi-funnel-fill"></i> Filter Floor:</label>
+            </div>
+            <div class="col-auto">
+                <select name="floor" class="form-select form-select-sm bg-transparent text-white border-0 border-bottom rounded-0 shadow-none px-0" onchange="this.form.submit()">
+                    <option value="" class="text-dark">All Floors</option>
+                    @if (ViewBag.Floors != null)
+                    {
+                        foreach (string floor in ViewBag.Floors)
+                        {
+                            <option value="@floor" selected="@(floor == (string)ViewBag.SelectedFloor)" class="text-dark">@floor</option>
+                        }
+                    }
+                </select>
+            </div>
+        </form>
+    </div>
+
+    @* Inventory Grid: Iterates through the Room collection loaded via Entity Framework *@
+    <div class="row g-4">
+        @foreach (var item in Model)
+        {
+            @* State Logic: Calculates real-time occupancy and determines visual status indicators *@
+            int current = item.Students?.Count ?? 0;
+            int max = item.Capacity;
+            string statusColor = current >= max ? "#ff4757" : (current == 0 ? "#2ed573" : "#ffa502");
+            string statusText = current >= max ? "FULL" : "Available";
+
+            <div class="col-md-4">
+                <div class="card glass-card h-100 border-0 p-2">
+                    <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center pt-3">
+                        <h4 class="mb-0 fw-bold">@item.RoomNumber</h4>
+                        <span class="badge rounded-pill px-3" style="background: @(statusColor)33; color: @statusColor; border: 1px solid @(statusColor)66;">
+                            @statusText
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="text-white-50 small"><i class="bi bi-layers me-1"></i> Floor</span>
+                            <span class="fw-bold">@item.Floor</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2 small">
+                            <span class="text-white-50">Occupancy</span>
+                            <span>@current / @max Beds</span>
+                        </div>
+
+                        @* Progress Visualization: Dynamic width and color-state based on room utilization *@
+                        <div class="progress mb-4 bg-white bg-opacity-10" style="height: 6px; border-radius: 10px;">
+                            <div class="progress-bar" role="progressbar"
+                                 style="width: @(max > 0 ? (current * 100 / max) : 0)%; background-color: @statusColor; box-shadow: 0 0 10px @statusColor;"></div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="glass-btn btn-sm flex-fill py-2">
+                                <i class="bi bi-pencil-square me-2"></i> Edit
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="glass-btn-danger btn-sm flex-fill py-2">
+                                <i class="bi bi-trash3 me-2"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @* Empty State Handling: Renders fallback UI when the Model collection returns null or empty *@
+    @if (!Model.Any())
+    {
+        <div class="glass-card text-center mt-5 py-5 border-0" style="animation:none; opacity:1;">
+            <i class="bi bi-search display-4 d-block mb-3 opacity-25"></i>
+            <h5 class="fw-bold opacity-50">No rooms found in this wing</h5>
+        </div>
+    }
+</div>
+
+
+
+Would you like me to process your next file, such as the **RoomController** or the **Create Room** view?

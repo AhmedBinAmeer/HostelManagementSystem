@@ -1,0 +1,212 @@
+﻿@using Microsoft.AspNetCore.Http
+@{
+    ViewData["Title"] = "My Profile";
+    string role = Context.Session.GetString("Role");
+    var student = Model as HostelApp.Models.Student;
+}
+
+<style>
+    /* 1. THEME BACKGROUND - Luminous Navy */
+    body {
+        background: radial-gradient(circle at 15% 15%, #144272, transparent 40%), radial-gradient(circle at 85% 85%, #1e56a0, transparent 40%), linear-gradient(135deg, #0a2647 0%, #061a33 100%);
+        background-attachment: fixed;
+        min-height: 100vh;
+        color: white;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+    }
+
+    /* 2. WRAPPER FOR CENTERING CONTENT BELOW NAVBAR */
+    .form-container-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 90vh;
+        padding: 40px 20px;
+    }
+
+    /* 3. THE GLASS PROFILE CARD */
+    .glass-profile-card {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 28px;
+        padding: 2.5rem;
+        width: 100%;
+        max-width: 550px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+        animation: slideUpFade 0.5s ease-out forwards;
+    }
+
+    /* 4. FORM ELEMENTS */
+    .form-label-glass {
+        color: rgba(255, 255, 255, 0.7) !important;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        letter-spacing: 1.5px;
+        margin-bottom: 8px;
+    }
+
+    .glass-input {
+        background: rgba(255, 255, 255, 0.08) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        color: white !important;
+        border-radius: 12px !important;
+        padding: 12px 15px;
+        transition: 0.3s ease;
+    }
+
+        .glass-input:focus {
+            background: rgba(255, 255, 255, 0.12) !important;
+            border-color: #00d2ff !important;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.3) !important;
+        }
+
+    /* 5. UNIFIED GLASS BUTTONS */
+    .btn-save-glass {
+        background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+        border: none;
+        border-radius: 12px;
+        color: white;
+        font-weight: 700;
+        padding: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: 0.3s ease;
+    }
+
+        .btn-save-glass:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 210, 255, 0.4);
+        }
+
+    .btn-warden-glass {
+        background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%);
+        border: none;
+        border-radius: 12px;
+        color: white;
+        font-weight: 700;
+        padding: 14px;
+        text-transform: uppercase;
+    }
+
+    .avatar-circle {
+        width: 90px;
+        height: 90px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+
+    @@keyframes slideUpFade {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="form-container-wrapper">
+    <div class="glass-profile-card">
+
+        @if (TempData["Message"] != null)
+        {
+            <div class="alert bg-success bg-opacity-10 text-success border-0 small mb-4 py-2" style="backdrop-filter: blur(10px);">
+                <i class="bi bi-check-circle-fill me-2"></i> @TempData["Message"]
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert bg-danger bg-opacity-10 text-danger border-0 small mb-4 py-2" style="backdrop-filter: blur(10px);">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> @TempData["Error"]
+            </div>
+        }
+
+        <div class="text-center mb-4">
+            <h3 class="fw-bold text-white mb-0"><i class="bi bi-person-badge me-2 text-info"></i>Profile Settings</h3>
+            <p class="text-white-50 small">Manage your account and security preferences</p>
+        </div>
+
+        @if (role == "Student" && student != null)
+        {
+            <form asp-action="UpdateStudentProfile" method="post">
+                <input type="hidden" name="id" value="@student.Id" />
+
+                <div class="text-center mb-4">
+                    <div class="avatar-circle shadow-sm">
+                        <span class="fs-1">👨‍🎓</span>
+                    </div>
+                    <h4 class="text-white mb-0 fw-bold">@student.Name</h4>
+                    <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 mt-2 px-3">RESIDENT STUDENT</span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label-glass">Phone Number</label>
+                    <input type="text" name="phone" class="form-control glass-input" value="@student.PhoneNumber" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label-glass">Email Address</label>
+                    <input type="email" name="email" class="form-control glass-input" value="@student.Email" />
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label-glass text-info"><i class="bi bi-shield-lock me-1"></i> New Password (CNIC)</label>
+                    <input type="text" name="newPassword" class="form-control glass-input" placeholder="Enter new password to change..." />
+                </div>
+
+                <div class="d-grid pt-2">
+                    <button type="submit" class="btn btn-save-glass">Update Student Profile</button>
+                </div>
+            </form>
+        }
+
+        else if (role == "Warden")
+        {
+            <div class="text-center mb-4">
+                <div class="avatar-circle shadow-sm">
+                    <span class="fs-1">👨🏻‍💼</span>
+                </div>
+                <h4 class="text-white mb-0 fw-bold">@ViewBag.AdminName</h4>
+                <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 mt-2 px-3">ADMINISTRATOR</span>
+                <div class="small text-white-50 mt-2 opacity-75">Managed ID: @ViewBag.AdminUsername</div>
+            </div>
+
+            <form asp-action="UpdateWardenPassword" method="post">
+                <div class="mb-3">
+                    <label class="form-label-glass">Display Name</label>
+                    <input type="text" name="newName" class="form-control glass-input" value="@ViewBag.AdminName" />
+                </div>
+
+                <div class="border-top border-white border-opacity-10 my-4"></div>
+
+                <div class="mb-3">
+                    <label class="form-label-glass">Current Verification Password</label>
+                    <input type="password" name="currentPassword" class="form-control glass-input" placeholder="••••••••" required />
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label-glass text-success">New Secure Password</label>
+                    <input type="password" name="newPassword" class="form-control glass-input" placeholder="••••••••" required />
+                </div>
+
+                <div class="d-grid gap-3 pt-2">
+                    <button type="submit" class="btn btn-warden-glass shadow-sm">Verify & Update Profile</button>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-link text-white-50 text-decoration-none small hover-white">
+                        <i class="bi bi-arrow-left me-1"></i> Return to Dashboard
+                    </a>
+                </div>
+            </form>
+        }
+    </div>
+</div>

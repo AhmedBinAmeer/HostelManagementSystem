@@ -1,0 +1,241 @@
+﻿@{
+    Layout = null; // Independent view without the shared _Layout wrapper
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="~/images/logos.png" />
+    <title>Login - Hostel Manager</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <style>
+        /* Base page layout and full-screen background image configuration */
+        body {
+            background: url('/images/hostel_bg.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Glassmorphism container with backdrop-blur for UI depth */
+        .login-card-glass {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(30px) saturate(150%);
+            -webkit-backdrop-filter: blur(30px) saturate(150%);
+            padding: 3rem;
+            border-radius: 35px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 440px;
+            animation: fadeInScale 0.6s ease-out;
+        }
+
+        /* Role-based portal selector styled as a toggle switch */
+        .portal-pill {
+            display: flex;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px;
+            border-radius: 50px;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+            .portal-pill input[type="radio"] {
+                display: none;
+            }
+
+            .portal-pill label {
+                flex: 1;
+                text-align: center;
+                padding: 10px;
+                cursor: pointer;
+                border-radius: 50px;
+                font-weight: 600;
+                font-size: 0.85rem;
+                transition: all 0.3s ease;
+                color: rgba(255, 255, 255, 0.7);
+            }
+
+            .portal-pill input[type="radio"]:checked + label {
+                background: white;
+                color: #0a2647;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            }
+
+        /* Input field aesthetics with translucent borders and glow effects */
+        .form-label {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 700;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .glass-input {
+            background: rgba(255, 255, 255, 0.15) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            color: white !important;
+            border-radius: 15px !important;
+            padding: 12px 18px;
+            transition: 0.3s;
+        }
+
+            .glass-input:focus {
+                background: rgba(255, 255, 255, 0.25) !important;
+                border-color: #00d2ff !important;
+                box-shadow: 0 0 15px rgba(0, 210, 255, 0.3) !important;
+            }
+
+            .glass-input::placeholder {
+                color: rgba(255, 255, 255, 0.4);
+            }
+
+        /* Primary action button with gradient and shadow transitions */
+        .btn-pill-login {
+            background: linear-gradient(135deg, #000435 0%, #3a7bd5 100%);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-weight: 700;
+            padding: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            box-shadow: 0 8px 25px rgba(0, 210, 255, 0.2);
+        }
+
+            .btn-pill-login:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 12px 30px rgba(0, 210, 255, 0.4);
+                filter: brightness(1.1);
+            }
+
+        .eye-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.2rem;
+        }
+
+        /* Branding logo styling */
+        .brand-logo img {
+            height: 90px;
+            width: auto;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
+        }
+
+        /* Animation for entrance effect */
+        @@keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-card-glass">
+        <div class="text-center mb-4">
+            <div class="brand-logo mb-3">
+                <img src="~/images/logo.png" alt="Air University Logo" />
+            </div>
+            <h3 class="fw-bold mb-0 text-white">Hostel Management</h3>
+            <p class="text-white-50 small">Air University Multan Portal</p>
+        </div>
+
+        @* Display server-side authentication errors from the AccountController *@
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert bg-danger bg-opacity-25 text-white border-0 text-center p-2 small mb-4" style="border-radius: 15px;">
+                <i class="bi bi-exclamation-circle me-1"></i> @ViewBag.Error
+            </div>
+        }
+
+        <form asp-action="Login" method="post">
+            @* Role selection: Determines which authentication logic is applied in the backend *@
+            <div class="portal-pill">
+                <input type="radio" name="portal" id="student" value="Student" checked onchange="updateLabels('Student')" />
+                <label for="student"><i class="bi bi-person-fill"></i> Student</label>
+
+                <input type="radio" name="portal" id="warden" value="Warden" onchange="updateLabels('Warden')" />
+                <label for="warden"><i class="bi bi-shield-lock-fill"></i> Warden</label>
+            </div>
+
+            <div class="mb-3">
+                <label id="userLabel" class="form-label">ROLL NO</label>
+                <input name="username" id="usernameInput" class="form-control glass-input" placeholder="e.g. 223532" required />
+            </div>
+
+            <div class="mb-4">
+                <label id="passLabel" class="form-label">CNIC / PASSWORD</label>
+                <div class="position-relative">
+                    <input name="password" id="passwordInput" type="password" class="form-control glass-input" placeholder="••••••••" required />
+                    <i class="bi bi-eye-slash eye-icon" id="togglePassword"></i>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-pill-login w-100">
+                Authorize Access
+            </button>
+        </form>
+
+        <div class="text-center mt-4">
+            <small class="text-white-50">Problem logging in? <br /> <a href="#" class="text-white text-decoration-none border-bottom">Contact Administration</a></small>
+        </div>
+    </div>
+
+
+
+    <script>
+        // Toggles input type between password and text for field security
+        const togglePassword = document.querySelector('#togglePassword');
+        const passwordInput = document.querySelector('#passwordInput');
+
+        togglePassword.addEventListener('click', function () {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('bi-eye');
+            this.classList.toggle('bi-eye-slash');
+        });
+
+        // Dynamically updates field labels and placeholders based on selected portal role
+        function updateLabels(portal) {
+            const userLabel = document.getElementById('userLabel');
+            const passLabel = document.getElementById('passLabel');
+            const userInput = document.getElementById('usernameInput');
+
+            if (portal === 'Warden') {
+                userLabel.innerText = "Warden Username";
+                passLabel.innerText = "Warden Password";
+                userInput.placeholder = "Enter admin ID";
+            } else {
+                userLabel.innerText = "ROLL NO";
+                passLabel.innerText = "CNIC / PASSWORD";
+                userInput.placeholder = "e.g. 223532";
+            }
+        }
+    </script>
+</body>
+</html>

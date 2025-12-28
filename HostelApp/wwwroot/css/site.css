@@ -1,0 +1,69 @@
+/* GLOBAL THEME VARIABLES */
+:root {
+    --navy-dark: #020c1b;
+    --navy-medium: #0a192f;
+    --navy-light: #112240;
+    --glass-white: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-blur: blur(25px);
+    --accent-cyan: #64ffda;
+    --accent-blue: #00d2ff;
+}
+
+/* 1. GLOBAL BACKGROUND */
+body {
+    background: radial-gradient(circle at 15% 15%, #144272, transparent 40%), 
+                radial-gradient(circle at 85% 85%, #1e56a0, transparent 40%), 
+                linear-gradient(135deg, #0a2647 0%, #061a33 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    color: white;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    margin-bottom: 60px;
+}
+
+/* 2. REUSABLE GLASS PANEL */
+.glass-panel {
+    background: var(--glass-white);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    padding: 2rem;
+    animation: slideUpFade 0.5s ease-out forwards;
+}
+
+/* 3. UNIFIED GLASS TABLES */
+.glass-table {
+    color: white !important;
+    border-collapse: separate;
+}
+
+.glass-table thead th {
+    color: var(--accent-cyan) !important;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1.5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 4. LUMINOUS INPUTS */
+.glass-input {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: white !important;
+    border-radius: 12px !important;
+    transition: 0.3s ease;
+}
+
+.glass-input:focus {
+    border-color: var(--accent-blue) !important;
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.3) !important;
+}
+
+/* ANIMATIONS */
+@keyframes slideUpFade {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}

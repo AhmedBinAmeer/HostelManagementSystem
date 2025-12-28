@@ -1,0 +1,156 @@
+﻿@model HostelApp.Models.Room
+
+<style>
+    /* 1. APPLYING THEME TO BODY WITHOUT BREAKING NAVBAR */
+    body {
+        background: radial-gradient(circle at 15% 15%, #144272, transparent 40%), radial-gradient(circle at 85% 85%, #1e56a0, transparent 40%), linear-gradient(135deg, #0a2647 0%, #061a33 100%);
+        background-attachment: fixed;
+        min-height: 100vh;
+        color: white;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+    }
+
+    /* 2. WRAPPER FOR CENTERING CONTENT (This fixes your Navbar issue) */
+    .form-container-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 80vh; /* Adjusts based on available space below navbar */
+        padding: 20px;
+    }
+
+    /* 3. THE GLASS FORM CARD */
+    .glass-form-card {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 28px;
+        padding: 2.5rem;
+        width: 100%;
+        max-width: 480px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        animation: slideUpFade 0.5s ease-out;
+    }
+
+    /* 4. FORM ELEMENTS */
+    .form-label-glass {
+        color: rgba(255, 255, 255, 0.7) !important;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        letter-spacing: 1.5px;
+        margin-bottom: 8px;
+    }
+
+    .glass-input {
+        background: rgba(255, 255, 255, 0.08) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        color: white !important;
+        border-radius: 12px !important;
+        padding: 12px 15px;
+        transition: 0.3s ease;
+    }
+
+        .glass-input:focus {
+            background: rgba(255, 255, 255, 0.12) !important;
+            border-color: #00d2ff !important;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.3) !important;
+        }
+
+        .glass-input option {
+            background: #0a2647;
+            color: white;
+        }
+
+    /* 5. UNIFIED GLASS BUTTONS */
+    .btn-update-glass {
+        background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+        border: none;
+        border-radius: 12px;
+        color: white;
+        font-weight: 700;
+        padding: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: 0.3s ease;
+    }
+
+        .btn-update-glass:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 210, 255, 0.4);
+        }
+
+    .btn-cancel-glass {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        border-radius: 12px;
+        font-weight: 600;
+        padding: 12px;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        transition: 0.3s;
+    }
+
+        .btn-cancel-glass:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+    @@keyframes slideUpFade {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="form-container-wrapper">
+    <div class="glass-form-card">
+        <div class="text-center mb-4">
+            <h3 class="fw-bold text-white mb-1"><i class="bi bi-pencil-square me-2 text-info"></i>Edit Room</h3>
+            <p class="text-white-50 small">Update hostel unit configuration</p>
+        </div>
+
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="mb-3">
+                <label asp-for="RoomNumber" class="form-label-glass">Room Identifier</label>
+                <input asp-for="RoomNumber" class="form-control glass-input" placeholder="e.g. 101" required />
+                <span asp-validation-for="RoomNumber" class="text-info small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Floor" class="form-label-glass">Building Floor</label>
+                <select asp-for="Floor" class="form-select glass-input">
+                    <option value="B1">B1 (Basement 1)</option>
+                    <option value="G">G (Ground Floor)</option>
+                    <option value="F1">F1 (1st Floor)</option>
+                    <option value="F2">F2 (2nd Floor)</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Capacity" class="form-label-glass">Total Beds</label>
+                <input asp-for="Capacity" type="number" class="form-control glass-input" min="1" max="10" required />
+            </div>
+
+            <div class="row g-2 pt-2">
+                <div class="col-6">
+                    <a asp-action="Index" class="btn-cancel-glass w-100">Cancel</a>
+                </div>
+                <div class="col-6">
+                    <button type="submit" class="btn-update-glass w-100 shadow-sm">Update</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

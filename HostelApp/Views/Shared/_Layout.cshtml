@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] -     Hostel Manager</title>
+
+    <link rel="icon" type="image/png" href="~/images/Airlogo.png" />
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <style>
+        .navbar-custom {
+            background-color: #0a2647;
+            padding: 0.8rem 1rem;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white !important;
+        }
+
+        .nav-link {
+            color: #bdc3c7 !important;
+            font-size: 1.1rem;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+            .nav-link:hover, .nav-link.active {
+                color: #ffc107 !important;
+                font-weight: bold;
+            }
+
+        .btn-logout {
+            color: #ff4d4d !important;
+            font-weight: bold;
+            border: 1px solid #ff4d4d;
+            padding: 5px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+            .btn-logout:hover {
+                background-color: #ff4d4d;
+                color: white !important;
+            }
+
+        .user-profile-link {
+            color: #aeb6bf;
+            margin-right: 20px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+            .user-profile-link:hover {
+                color: white;
+            }
+    </style>
+</head>
+<body style="background-color: #f4f6f9;">
+
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-custom box-shadow mb-3">
+            <div class="container-fluid">
+
+                <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+                    <img src="~/images/logo.png" alt="Logo" style="height: 50px; width: auto;" />
+                    @if (Context.Session.GetString("Role") == "Student")
+                    {
+                        <span>Student Portal</span>
+                    }
+                    else
+                    {
+                        <span>Hostel Manager</span>
+                    }
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+
+                    <ul class="navbar-nav flex-grow-1 justify-content-center">
+                        @if (Context.Session.GetString("Role") == "Warden")
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index"><i class="bi bi-grid-fill"></i> Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Student" asp-action="Index"><i class="bi bi-people-fill"></i> Students</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Room" asp-action="Index"><i class="bi bi-door-closed-fill"></i> Rooms</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Fee" asp-action="Index"><i class="bi bi-cash"></i> Fees</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Complaint" asp-action="Index"><i class="bi bi-exclamation-triangle-fill"></i> Complaints</a></li>
+                        }
+                        else if (Context.Session.GetString("Role") == "Student")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="StudentPortal" asp-action="Dashboard">
+                                    <i class="bi bi-house-door-fill"></i> My Dashboard
+                                </a>
+                            </li>
+                        }
+                    </ul>
+
+                    <div class="d-flex align-items-center">
+                        @if (Context.Session.GetString("Role") != null)
+                        {
+                            <a asp-controller="Account" asp-action="Profile" class="user-profile-link">
+                                <i class="bi bi-person-circle"></i> @(Context.Session.GetString("Name") ?? "Profile")
+                            </a>
+                        }
+
+                        <a asp-controller="Account" asp-action="Logout" class="btn-logout">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

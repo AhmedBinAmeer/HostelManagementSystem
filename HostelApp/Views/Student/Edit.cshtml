@@ -1,0 +1,179 @@
+﻿@model HostelApp.Models.Student
+
+<style>
+    /* 1. THEME BACKGROUND - Luminous Navy */
+    body {
+        background: radial-gradient(circle at 15% 15%, #144272, transparent 40%), radial-gradient(circle at 85% 85%, #1e56a0, transparent 40%), linear-gradient(135deg, #0a2647 0%, #061a33 100%);
+        background-attachment: fixed;
+        min-height: 100vh;
+        color: white;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+    }
+
+    /* 2. WRAPPER FOR CENTERING CONTENT BELOW NAVBAR */
+    .form-container-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 90vh;
+        padding: 40px 20px;
+    }
+
+    /* 3. THE GLASS FORM CARD */
+    .glass-form-card {
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 28px;
+        padding: 3rem;
+        width: 100%;
+        max-width: 700px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+        animation: slideUpFade 0.5s ease-out forwards;
+    }
+
+    /* 4. FORM ELEMENTS */
+    .form-label-glass {
+        color: rgba(255, 255, 255, 0.7) !important;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        letter-spacing: 1.5px;
+        margin-bottom: 8px;
+    }
+
+    .glass-input {
+        background: rgba(255, 255, 255, 0.08) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        color: white !important;
+        border-radius: 12px !important;
+        padding: 12px 15px;
+        transition: 0.3s ease;
+    }
+
+        .glass-input:focus {
+            background: rgba(255, 255, 255, 0.12) !important;
+            border-color: #00d2ff !important;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.3) !important;
+        }
+
+        .glass-input option {
+            background: #0a2647;
+            color: white;
+        }
+
+    /* 5. UNIFIED GLASS BUTTONS */
+    .btn-update-glass {
+        background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+        border: none;
+        border-radius: 12px;
+        color: white;
+        font-weight: 700;
+        padding: 14px 30px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: 0.3s ease;
+    }
+
+        .btn-update-glass:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 210, 255, 0.4);
+            filter: brightness(1.1);
+        }
+
+    .btn-cancel-glass {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        border-radius: 12px;
+        font-weight: 600;
+        padding: 14px 30px;
+        text-decoration: none;
+        transition: 0.3s;
+        display: inline-block;
+        text-align: center;
+    }
+
+        .btn-cancel-glass:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+    @@keyframes slideUpFade {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="form-container-wrapper">
+    <div class="glass-form-card">
+        <div class="text-center mb-5">
+            <div class="stat-icon-circle mb-3 d-inline-flex align-items-center justify-content-center"
+                 style="width: 64px; height: 64px; background: rgba(0, 210, 255, 0.15); border-radius: 20px; color: #00d2ff; font-size: 1.6rem; border: 1px solid rgba(0, 210, 255, 0.3);">
+                <i class="bi bi-pencil-square"></i>
+            </div>
+            <h2 class="fw-bold text-white mb-1">Update Resident</h2>
+            <p class="text-white-50 small">Modify existing student profile information</p>
+        </div>
+
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <label asp-for="Name" class="form-label-glass">Full Name</label>
+                    <input asp-for="Name" class="form-control glass-input" required />
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="StudentRollNo" class="form-label-glass">Roll Number</label>
+                    <input asp-for="StudentRollNo" class="form-control glass-input" required />
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="CNIC" class="form-label-glass">CNIC (Password)</label>
+                    <input asp-for="CNIC" class="form-control glass-input" required />
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="PhoneNumber" class="form-label-glass">Phone Number</label>
+                    <input asp-for="PhoneNumber" class="form-control glass-input" required />
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Program" class="form-label-glass">Program</label>
+                    <select asp-for="Program" class="form-select glass-input">
+                        <option>BSCS</option>
+                        <option>BBA</option>
+                        <option>BSAF</option>
+                        <option>BSSE</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="RoomId" class="form-label-glass">Assign Room</label>
+                    <select asp-for="RoomId" class="form-select glass-input" asp-items="ViewBag.Rooms">
+                        <option value="">-- Unassigned --</option>
+                    </select>
+                </div>
+
+                <div class="col-12">
+                    <label asp-for="Email" class="form-label-glass">Email Address</label>
+                    <input asp-for="Email" type="email" class="form-control glass-input" placeholder="student@mail.au.edu.pk" />
+                </div>
+            </div>
+
+            <div class="mt-5 d-flex justify-content-end gap-3">
+                <a asp-action="Index" class="btn-cancel-glass px-5">Cancel</a>
+                <button type="submit" class="btn-update-glass px-5 shadow-sm">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
